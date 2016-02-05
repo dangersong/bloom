@@ -61,10 +61,8 @@ Meteor.methods({
       })
     },
     postFBPhoto: function(url) {
-        console.log('here: ', url);
         FBGraph.setAccessToken(Meteor.user().services.facebook.accessToken);
         var fbUserId = Meteor.user().services.facebook.id;
-
         var wallPost = {
             url: url
         };
@@ -75,6 +73,7 @@ Meteor.methods({
             } else {
                 // returns the post id
                 console.log('res: ', res); // { id: xxxxx}
+                return res;
             }
         });
     },

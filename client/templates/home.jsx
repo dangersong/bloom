@@ -26,8 +26,10 @@ Home = React.createClass({
         },
         facebook: {
           name: 'Facebook',
-          post: function(imageURL) {
-            Meteor.call('postFBPhoto', imageURL, function(err, data) {});
+          post: function(imageURL) {            
+            Meteor.call('postFBPhoto', imageURL, function(err, data) {
+              console.log('Photo successfully posted to Facebook');
+            });
           }
         },
         imgur: {
@@ -66,7 +68,7 @@ Home = React.createClass({
 
     for (var i = 0; i < fileUpload.length; i++) {
       var imageLocal = "https://bloom-photos.s3-us-west-1.amazonaws.com/"+this.data.currentUser._id+"/"+fileUpload[i].name;
-      console.log(imageLocal);
+      // console.log(imageLocal);
       imageDetails._collection.insert({
         imageurl: imageLocal,
         time: new Date()
@@ -94,9 +96,9 @@ Home = React.createClass({
     }
   },
   postImage(images, services) {
-    //console.log('postImage: ', images, services);
+    // console.log('postImage: ', images, services);
     var state = this.state.services;
-    console.log(state);
+    // console.log('state: ', state);
     _.each(services, function(key1, service) {
       _.each(images, function(key2, image) {
         console.log(service, image);
@@ -113,15 +115,8 @@ Home = React.createClass({
     return (
       <div className="">
         <div className="row">
-          <div className="col s12">
-            <ul className="tabs">
-              {this.renderServices()}
-            </ul>
-          </div>
-        </div>
-        <div className="row">
           <form id="upload" className="col s12" onSubmit={this.uploadImage}>
-            <p className="flow-text">CLICK HERE TO UPLOAD</p>
+            <p className="flow-text">UPLOAD IMAGES</p>
             <div className="row valign-wrapper">
               <div className="file-field input-field col s10 valign">
                 <div className="btn">
@@ -139,16 +134,66 @@ Home = React.createClass({
               </div>
             </div>
           </form>
-          <button className="btn waves-effect waves-light" onClick={ this.postImage.bind(null, this.state.selectedImages, this.state.selectedServices) }>POST
-            <i className="mdi-content-send right"></i></button>
         </div>
+        <p className="flow-text">SELECT IMAGES TO POST</p>
         <div className="row">
           <div className="thumbs">
             {this.renderImages()}
           </div>
         </div>
+        <div className="row">
+          <div className="file-field input-field col s10 valign">
+            <button className="btn waves-effect waves-light" onClick={ this.postImage.bind(null, this.state.selectedImages, {'facebook': true}) }>POST TO FACEBOOK
+            <i className="mdi-content-send right"></i></button>
+          </div>
+        </div>
       </div>
     );
+    // return (
+    //   <div className="">
+    //     <p className="flow-text">WHERE WOULD YOU LIKE TO POST TO?</p>
+    //     <div className="row">
+    //       <div className="col s12">
+    //         <ul className="tabs">
+    //           {this.renderServices()}
+    //         </ul>
+    //       </div>
+    //     </div>
+    //     <div className="row">
+    //       <form id="upload" className="col s12" onSubmit={this.uploadImage}>
+    //         <p className="flow-text">UPLOAD IMAGES</p>
+    //         <div className="row valign-wrapper">
+    //           <div className="file-field input-field col s10 valign">
+    //             <div className="btn">
+    //               <span>File</span>
+    //               <input id="input" type="file" multiple/>
+    //             </div>
+    //             <div className="file-path-wrapper">
+    //               <input className="file-path validate" type="text" placeholder="Upload one or more files"/>
+    //             </div>
+    //           </div>
+    //           <div className="col s2 valign">
+    //             <button className="btn waves-effect waves-light " type="submit" name="action">
+    //               <i className="mdi-content-add-box"></i> Post
+    //             </button>
+    //           </div>
+    //         </div>
+    //       </form>
+    //     </div>
+    //     <p className="flow-text">SELECT IMAGES TO POST</p>
+    //     <div className="row">
+    //       <div className="thumbs">
+    //         {this.renderImages()}
+    //       </div>
+    //     </div>
+    //     <div className="row">
+    //       <div className="file-field input-field col s10 valign">
+    //         <button className="btn waves-effect waves-light" onClick={ this.postImage.bind(null, this.state.selectedImages, this.state.selectedServices) }>POST TO FACEBOOK
+    //         <i className="mdi-content-send right"></i></button>
+    //       </div>
+    //     </div>
+    //   </div>
+    // );
   }
 });
 
@@ -191,7 +236,7 @@ EnabledServices = React.createClass({
     else{
       this.props.selectedServices[service] = true;
     }
-    console.log('boom: ', this.props.selectedServices);
+    console.log('Post here: ', this.props.selectedServices);
   }
 });
 
